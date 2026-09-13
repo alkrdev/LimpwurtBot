@@ -34,7 +34,7 @@ Discord bot for the community server. Built with [discord.js](https://discord.js
    npm run deploy-commands
    ```
 
-   Re-run this any time you add, remove, or change a command's definition.
+   This is only needed for local development so you don't have to keep restarting the bot to test command changes — in production the bot registers commands itself on every boot (see below).
 
 6. Run the bot:
 
@@ -77,7 +77,7 @@ Railway works well for this out of the box:
 2. Railway auto-detects Node via Nixpacks and will run `npm install`, then `npm run build`, then `npm start` (Nixpacks picks these up from `package.json` automatically — no extra config needed).
 3. Set the environment variables (`DISCORD_TOKEN`, `CLIENT_ID`, and optionally `GUILD_ID`) in the Railway project's **Variables** tab.
 4. Since this bot only uses Gateway events (no HTTP server), Railway will still keep the process alive as a background worker — no need to expose a port.
-5. Run `npm run deploy-commands` once (locally, or as a one-off Railway command) whenever your command list changes — it's a separate step from starting the bot.
+5. The bot re-registers its slash commands automatically every time it starts up (see `src/index.ts`), so a normal Railway deploy is enough to pick up new/changed commands — no separate step needed in production.
 
 ### Alternatives to Railway
 

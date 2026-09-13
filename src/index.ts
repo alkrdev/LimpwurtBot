@@ -1,6 +1,7 @@
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 import { config } from "./config.js";
 import { commands } from "./commands/index.js";
+import { registerCommands } from "./register-commands.js";
 import type { Command } from "./types.js";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -36,4 +37,12 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
-client.login(config.discordToken);
+async function main() {
+  await registerCommands();
+  await client.login(config.discordToken);
+}
+
+main().catch((error) => {
+  console.error("Failed to start bot:", error);
+  process.exit(1);
+});
