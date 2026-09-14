@@ -14,27 +14,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const faqPath = path.join(__dirname, "..", "data", "faq.json");
 const faqEntries: FaqEntry[] = JSON.parse(readFileSync(faqPath, "utf-8"));
 
-export const command: Command = {
-  data: new SlashCommandBuilder()
-    .setName("faq")
-    .setDescription("Get the answer to a frequently asked question")
-    .addStringOption((option) => {
-      option.setName("question").setDescription("Which question?").setRequired(true);
-      for (const entry of faqEntries) {
-        option.addChoices({ name: entry.question, value: entry.key });
-      }
-      return option;
-    }),
+export const faqCommands: Command[] = faqEntries.map((entry) => ({
+  data: new SlashCommandBuilder().setName(entry.key).setDescription(entry.question.slice(0, 100)),
 
   async execute(interaction) {
-    const key = interaction.options.getString("question", true);
-    const entry = faqEntries.find((e) => e.key === key);
-
-    if (!entry) {
-      await interaction.reply({ content: "Couldn't find that question.", ephemeral: true });
-      return;
-    }
-
     const embed = new EmbedBuilder()
       .setColor(0x5865f2)
       .setTitle(entry.question)
@@ -42,4 +25,4 @@ export const command: Command = {
 
     await interaction.reply({ embeds: [embed] });
   },
-};
+}));
