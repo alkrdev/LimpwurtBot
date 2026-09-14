@@ -2,5 +2,7 @@ import type { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandOpti
 
 export interface Command {
   data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
+  /** Per-user cooldown in seconds before this command can be run again. Defaults to DEFAULT_COOLDOWN_SECONDS. */
+  cooldownSeconds?: number;
   execute(interaction: ChatInputCommandInteraction): Promise<void>;
 }

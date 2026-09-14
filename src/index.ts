@@ -2,6 +2,7 @@ import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 import { config } from "./config.js";
 import { commands } from "./commands/index.js";
 import { registerCommands } from "./register-commands.js";
+import { checkCooldown, DEFAULT_COOLDOWN_SECONDS } from "./cooldowns.js";
 import type { Command } from "./types.js";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -20,6 +21,16 @@ client.on(Events.InteractionCreate, async (interaction) => {
   const command = commandsByName.get(interaction.commandName);
   if (!command) {
     console.warn(`No handler registered for command: ${interaction.commandName}`);
+    return;
+  }
+
+  const cooldownSeconds = command.cooldownSeconds ?? DEFAULT_COOLDOWN_SECONDS;
+  const remaining = checkCooldown(interaction.commandName, interaction.user.id, cooldownSeconds);
+  if (remaining !== null) {
+    await interaction.reply({
+      content: `Slow down! Try \`/${interaction.commandName}\` again in ${remaining}s.`,
+      ephemeral: true,
+    });
     return;
   }
 
