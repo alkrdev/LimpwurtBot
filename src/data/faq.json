@@ -1,0 +1,32 @@
+[
+  {
+    "key": "remote-chunk-teleport",
+    "question": "If you unlock a teleport to a remote chunk, does that make it unlockable?",
+    "answer": "No, as per the rules from the beginning, remote chunks are not unlockable just because I can now teleport to them."
+  },
+  {
+    "key": "unlocked-chunks",
+    "question": "What are the current unlocked chunks?",
+    "answer": "Chunk Picker: https://source-chunk.github.io/chunk-picker-v2/?limp-view"
+  },
+  {
+    "key": "chunk-not-rollable",
+    "question": "Why did you not make chunk X rollable, before rolling?",
+    "answer": "Because it likely has no content or is more part of an unreachable area."
+  },
+  {
+    "key": "meme-drop",
+    "question": "You are an extreme chunkman, so why are you not going for this 1/1000000 drop?",
+    "answer": "Because that is considered a meme drop."
+  },
+  {
+    "key": "denmark",
+    "question": "Is Denmark a real country?",
+    "answer": "Don't be silly, of course it isn't."
+  },
+  {
+    "key": "old-streams",
+    "question": "Where can I watch old streams?",
+    "answer": "https://www.youtube.com/playlist?list=PLDeBkMwh3gDOgc1z0HelLWWMtIfW69iT3\n\nI unlist them because I don't want to clog people's recommended, but they are visible on my main page."
+  }
+]
