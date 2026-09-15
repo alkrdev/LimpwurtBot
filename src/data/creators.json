@@ -1,54 +1,67 @@
 [
   {
     "name": "Verf",
-    "url": "https://www.youtube.com/@VerfRS"
+    "url": "https://www.youtube.com/@VerfRS",
+    "series": ["Extreme Chunk: Kourend"]
   },
   {
     "name": "Fray",
-    "url": "https://www.youtube.com/@FrayRS"
+    "url": "https://www.youtube.com/@FrayRS",
+    "series": ["Extreme Chunk: Canifis"]
   },
   {
     "name": "Maikeru",
-    "url": "https://www.youtube.com/@MaikeruRS"
+    "url": "https://www.youtube.com/@MaikeruRS",
+    "series": ["Extreme Chunk: Camelot"]
   },
   {
     "name": "Happery",
-    "url": "https://www.youtube.com/@Happery"
+    "url": "https://www.youtube.com/@Happery",
+    "series": ["Extreme Chunk: UIM"]
   },
   {
     "name": "Agile Tom",
-    "url": "https://www.youtube.com/@Agile_Tom"
+    "url": "https://www.youtube.com/@Agile_Tom",
+    "series": ["Extreme Chunk: Chambers of Xeric", "Extreme Chunk: Tombs of Amascut"]
   },
   {
     "name": "Tellacon",
-    "url": "https://www.youtube.com/@Tellacon"
+    "url": "https://www.youtube.com/@Tellacon",
+    "series": ["Extreme Chunk: Volcano"]
   },
   {
     "name": "Zayzed",
-    "url": "https://www.youtube.com/@Zayzed"
+    "url": "https://www.youtube.com/@Zayzed",
+    "series": ["Extreme Log", "Boss Locked"]
   },
   {
     "name": "BrewScape",
-    "url": "https://www.youtube.com/@BrewScape"
+    "url": "https://www.youtube.com/@BrewScape",
+    "series": ["Extreme Chunk: Port Sarim"]
   },
   {
     "name": "Source Chunk",
-    "url": "https://www.youtube.com/@SourceChunk"
+    "url": "https://www.youtube.com/@SourceChunk",
+    "series": ["Creator of Chunk Picker"]
   },
   {
     "name": "Naber",
-    "url": "https://www.youtube.com/@NaberOSRS"
+    "url": "https://www.youtube.com/@NaberOSRS",
+    "series": ["Extreme Chunk: Deepfin Point"]
   },
   {
     "name": "FrankGlymes",
-    "url": "https://www.youtube.com/@FrankGlymes"
+    "url": "https://www.youtube.com/@FrankGlymes",
+    "series": ["SmithGuided"]
   },
   {
     "name": "Josh Isn't Gaming",
-    "url": "https://www.youtube.com/@JoshIsnt"
+    "url": "https://www.youtube.com/@JoshIsnt",
+    "series": ["Semi-Extreme Chunk: Yanille"]
   },
   {
     "name": "Impling Only",
-    "url": "https://www.youtube.com/@ImplingOnly"
+    "url": "https://www.youtube.com/@ImplingOnly",
+    "series": ["Impling Only", "Extreme Chunk: Corsair Cove"]
   }
 ]

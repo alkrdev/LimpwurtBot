@@ -7,6 +7,7 @@ import type { Command } from "../types.js";
 interface Creator {
   name: string;
   url: string;
+  series: string[];
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -39,7 +40,11 @@ export const command: Command = {
     const embed = new EmbedBuilder()
       .setColor(0x5865f2)
       .setTitle("Go give these creators some love")
-      .setDescription(picks.map((creator) => `• [${creator.name}](${creator.url})`).join("\n"));
+      .setDescription(
+        picks
+          .map((creator) => `• [${creator.name}](${creator.url}) — ${creator.series.join(", ")}`)
+          .join("\n"),
+      );
 
     await interaction.reply({ embeds: [embed] });
   },
