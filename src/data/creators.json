@@ -1,14 +1,54 @@
 [
   {
-    "name": "Example Creator One",
-    "url": "https://twitch.tv/examplecreatorone"
+    "name": "Verf",
+    "url": "https://www.youtube.com/@VerfRS"
   },
   {
-    "name": "Example Creator Two",
-    "url": "https://youtube.com/@examplecreatortwo"
+    "name": "Fray",
+    "url": "https://www.youtube.com/@FrayRS"
   },
   {
-    "name": "Example Creator Three",
-    "url": "https://twitch.tv/examplecreatorthree"
+    "name": "Maikeru",
+    "url": "https://www.youtube.com/@MaikeruRS"
+  },
+  {
+    "name": "Happery",
+    "url": "https://www.youtube.com/@Happery"
+  },
+  {
+    "name": "Agile Tom",
+    "url": "https://www.youtube.com/@Agile_Tom"
+  },
+  {
+    "name": "Tellacon",
+    "url": "https://www.youtube.com/@Tellacon"
+  },
+  {
+    "name": "Zayzed",
+    "url": "https://www.youtube.com/@Zayzed"
+  },
+  {
+    "name": "BrewScape",
+    "url": "https://www.youtube.com/@BrewScape"
+  },
+  {
+    "name": "Source Chunk",
+    "url": "https://www.youtube.com/@SourceChunk"
+  },
+  {
+    "name": "Naber",
+    "url": "https://www.youtube.com/@NaberOSRS"
+  },
+  {
+    "name": "FrankGlymes",
+    "url": "https://www.youtube.com/@FrankGlymes"
+  },
+  {
+    "name": "Josh Isn't Gaming",
+    "url": "https://www.youtube.com/@JoshIsnt"
+  },
+  {
+    "name": "Impling Only",
+    "url": "https://www.youtube.com/@ImplingOnly"
   }
 ]
