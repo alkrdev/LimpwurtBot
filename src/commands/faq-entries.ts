@@ -14,6 +14,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const faqPath = path.join(__dirname, "..", "data", "faq.json");
 const faqEntries: FaqEntry[] = JSON.parse(readFileSync(faqPath, "utf-8"));
 
+// Publicly visible replies; every other FAQ entry replies ephemerally.
+const PUBLIC_ENTRY_KEYS = new Set(["old-streams"]);
+
 export const faqCommands: Command[] = faqEntries.map((entry) => ({
   data: new SlashCommandBuilder().setName(entry.key).setDescription(entry.question.slice(0, 100)),
 
@@ -23,6 +26,6 @@ export const faqCommands: Command[] = faqEntries.map((entry) => ({
       .setTitle(entry.question)
       .setDescription(entry.answer);
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed], ephemeral: !PUBLIC_ENTRY_KEYS.has(entry.key) });
   },
 }));
