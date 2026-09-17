@@ -14,6 +14,6 @@ export const command: Command = {
   cooldownSeconds: 30,
 
   async execute(interaction) {
-    await interaction.reply(`Check <#${WHEN_CHANNEL_ID}> for that.`);
+    await interaction.reply({ content: `Check <#${WHEN_CHANNEL_ID}> for that.`, ephemeral: true });
   },
 };
