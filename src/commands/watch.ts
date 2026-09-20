@@ -1,18 +1,6 @@
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import type { Command } from "../types.js";
-
-interface Creator {
-  name: string;
-  url: string;
-  series: string[];
-}
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const creatorsPath = path.join(__dirname, "..", "data", "creators.json");
-const creators: Creator[] = JSON.parse(readFileSync(creatorsPath, "utf-8"));
+import { creators } from "../creators.js";
 
 export const command: Command = {
   data: new SlashCommandBuilder()

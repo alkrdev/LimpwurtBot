@@ -1,4 +1,5 @@
 import "dotenv/config";
+import path from "node:path";
 
 function requireEnv(name: string): string {
   const value = process.env[name];
@@ -12,4 +13,13 @@ export const config = {
   discordToken: requireEnv("DISCORD_TOKEN"),
   clientId: requireEnv("CLIENT_ID"),
   guildId: process.env.GUILD_ID || undefined,
+
+  // Optional: enables the new-upload announcement feature when set.
+  youtubeApiKey: process.env.YOUTUBE_API_KEY || undefined,
+  uploadPollIntervalMinutes: Number(process.env.UPLOAD_POLL_INTERVAL_MINUTES) || 15,
+
+  // Where persistent bot state (announcement channel, upload tracking) is
+  // stored on disk. Point this at a mounted Railway Volume to survive
+  // redeploys; otherwise it resets whenever the service restarts.
+  stateDir: process.env.STATE_DIR || path.join(process.cwd(), "state"),
 };
