@@ -6,15 +6,18 @@ export async function registerCommands(): Promise<void> {
   const body = commands.map((command) => command.data.toJSON());
   const rest = new REST().setToken(config.discordToken);
 
-  const target = config.guildId
-    ? Routes.applicationGuildCommands(config.clientId, config.guildId)
-    : Routes.applicationCommands(config.clientId);
+  if (config.guildIds.length === 0) {
+    console.log(`Registering ${body.length} command(s) globally...`);
+    const result = (await rest.put(Routes.applicationCommands(config.clientId), { body })) as unknown[];
+    console.log(`Successfully registered ${result.length} command(s).`);
+    return;
+  }
 
-  console.log(
-    `Registering ${body.length} command(s) ${config.guildId ? `to guild ${config.guildId}` : "globally"}...`,
-  );
-
-  const result = (await rest.put(target, { body })) as unknown[];
-
-  console.log(`Successfully registered ${result.length} command(s).`);
+  for (const guildId of config.guildIds) {
+    console.log(`Registering ${body.length} command(s) to guild ${guildId}...`);
+    const result = (await rest.put(Routes.applicationGuildCommands(config.clientId, guildId), {
+      body,
+    })) as unknown[];
+    console.log(`Successfully registered ${result.length} command(s) to guild ${guildId}.`);
+  }
 }

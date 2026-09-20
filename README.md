@@ -27,7 +27,7 @@ Discord bot for the community server. Built with [discord.js](https://discord.js
 
    - `DISCORD_TOKEN` — the bot token.
    - `CLIENT_ID` — the application ID.
-   - `GUILD_ID` — (optional, dev only) a server ID to register commands to instantly. Leave blank to register commands globally (takes up to ~1 hour to propagate, use this for production).
+   - `GUILD_ID` — (optional) comma-separated server ID(s) to register commands to instantly, e.g. `prodServerId,testServerId` to keep a production and test server both up to date. Leave blank to register commands globally (takes up to ~1 hour to propagate).
 
 4. Invite the bot to your server using an OAuth2 URL with the `bot` and `applications.commands` scopes, and at minimum the "Send Messages" and "Use Slash Commands" permissions.
 

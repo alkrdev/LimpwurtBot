@@ -12,7 +12,12 @@ function requireEnv(name: string): string {
 export const config = {
   discordToken: requireEnv("DISCORD_TOKEN"),
   clientId: requireEnv("CLIENT_ID"),
-  guildId: process.env.GUILD_ID || undefined,
+  // Comma-separated list of guild IDs to register commands to instantly
+  // (e.g. production + a test server). Leave empty to register globally.
+  guildIds: (process.env.GUILD_ID ?? "")
+    .split(",")
+    .map((id) => id.trim())
+    .filter(Boolean),
 
   // Optional: enables the new-upload announcement feature when set.
   youtubeApiKey: process.env.YOUTUBE_API_KEY || undefined,
