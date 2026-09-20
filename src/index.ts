@@ -3,6 +3,7 @@ import { config } from "./config.js";
 import { commands } from "./commands/index.js";
 import { registerCommands } from "./register-commands.js";
 import { checkCooldown, DEFAULT_COOLDOWN_SECONDS } from "./cooldowns.js";
+import { startUploadPolling } from "./uploads/poller.js";
 import type { Command } from "./types.js";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -13,6 +14,7 @@ const commandsByName = new Collection<string, Command>(
 
 client.once(Events.ClientReady, (readyClient) => {
   console.log(`Logged in as ${readyClient.user.tag}`);
+  startUploadPolling(readyClient);
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {
