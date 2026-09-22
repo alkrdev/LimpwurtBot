@@ -1,4 +1,4 @@
-import { ChannelType, PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
+import { ChannelType, MessageFlags, PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
 import type { Command } from "../types.js";
 import { setAnnouncementChannelId } from "../uploads/store.js";
 
@@ -17,7 +17,7 @@ export const command: Command = {
 
   async execute(interaction) {
     if (!interaction.inCachedGuild()) {
-      await interaction.reply({ content: "This can only be used in a server.", ephemeral: true });
+      await interaction.reply({ content: "This can only be used in a server.", flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -26,7 +26,7 @@ export const command: Command = {
 
     await interaction.reply({
       content: `New video announcements will now be posted in <#${channel.id}>.`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
   },
 };

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from "discord.js";
 import type { Command } from "../types.js";
 
 interface FaqEntry {
@@ -26,6 +26,6 @@ export const faqCommands: Command[] = faqEntries.map((entry) => ({
       .setTitle(entry.question)
       .setDescription(entry.answer);
 
-    await interaction.reply({ embeds: [embed], ephemeral: !PUBLIC_ENTRY_KEYS.has(entry.key) });
+    await interaction.reply({ embeds: [embed], flags: PUBLIC_ENTRY_KEYS.has(entry.key) ? undefined : MessageFlags.Ephemeral });
   },
 }));
