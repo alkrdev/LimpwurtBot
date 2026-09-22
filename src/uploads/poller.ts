@@ -3,16 +3,20 @@ import { ChannelType } from "discord.js";
 import { config } from "../config.js";
 import { creators, youtubeHandleFor } from "../creators.js";
 import { getAllAnnouncementChannelIds, getCreatorState, setCreatorState } from "./store.js";
-import { fetchLatestVideos, resolveUploadsPlaylistId, type VideoSummary } from "./youtube.js";
+import { fetchLatestVideos, resolveUploadsPlaylistId } from "./youtube.js";
+
+function todayUtc(): string {
+  return new Date().toISOString().slice(0, 10);
+}
 
 function isToday(isoDate: string): boolean {
-  const now = new Date();
-  const published = new Date(isoDate);
-  return (
-    published.getUTCFullYear() === now.getUTCFullYear() &&
-    published.getUTCMonth() === now.getUTCMonth() &&
-    published.getUTCDate() === now.getUTCDate()
-  );
+  return typeof isoDate === "string" && isoDate.slice(0, 10) === todayUtc(); // upcoming streams have no publish date yet
+}
+
+function buildMessage(creatorName: string, videoIds: string[]): string {
+  const urls = videoIds.map((id) => `https://www.youtube.com/watch?v=${id}`);
+  if (urls.length === 1) return `${creatorName} just posted a new video: ${urls[0]}`;
+  return `${creatorName} posted ${urls.length} new videos today:\n${urls.join("\n")}`;
 }
 
 async function checkCreator(client: Client, creator: (typeof creators)[number]): Promise<void> {
@@ -33,47 +37,76 @@ async function checkCreator(client: Client, creator: (typeof creators)[number]):
     }
   }
 
-  const latestVideos = await fetchLatestVideos(apiKey, uploadsPlaylistId, 5);
-  if (latestVideos.length === 0) {
-    setCreatorState(creator.name, { ...state, uploadsPlaylistId, initialized: true });
-    return;
-  }
+  const latestVideos = await fetchLatestVideos(apiKey, uploadsPlaylistId, 10);
+  const todaysIds = latestVideos
+    .filter((video) => isToday(video.publishedAt))
+    .map((video) => video.videoId)
+    .reverse(); // oldest first, so the message lists them in upload order
 
-  if (!state.initialized) {
-    // First time seeing this creator: record the current newest video as the
-    // baseline without announcing anything, so we never dump their back-catalog.
+  const date = todayUtc();
+
+  if (!state.initialized || !state.today) {
+    // First time seeing this creator (or first run of the daily-message format): treat whatever is
+    // already out today as known, without posting, so we never dump their back-catalog or repeat
+    // announcements the previous format already made.
     setCreatorState(creator.name, {
       uploadsPlaylistId,
-      lastVideoId: latestVideos[0].videoId,
       initialized: true,
+      today: { date, videoIds: todaysIds, messages: {} },
     });
     return;
   }
 
-  const newVideos: VideoSummary[] = [];
-  for (const video of latestVideos) {
-    if (video.videoId === state.lastVideoId) break;
-    newVideos.push(video);
-  }
-  newVideos.reverse(); // oldest of the new batch first, so announcements post in upload order
+  const today = state.today.date === date ? state.today : { date, videoIds: [], messages: {} };
 
-  for (const video of newVideos) {
-    if (!isToday(video.publishedAt)) continue; // skip anything not published today
+  const hasNewVideo = todaysIds.some((id) => !today.videoIds.includes(id));
+  // Rebuilding from the playlist each time means a video that gets deleted or privated (e.g. a
+  // re-upload) drops out of the message on the next edit.
+  const videoIds = todaysIds.filter((id) => today.videoIds.includes(id) || hasNewVideo);
 
-    const videoUrl = `https://www.youtube.com/watch?v=${video.videoId}`;
-    const message = `${creator.name} just posted a new video: ${videoUrl}`;
+  const listChanged =
+    videoIds.length !== today.videoIds.length || videoIds.some((id, i) => id !== today.videoIds[i]);
+
+  if (hasNewVideo || (listChanged && Object.keys(today.messages).length > 0 && videoIds.length > 0)) {
+    const content = buildMessage(creator.name, videoIds);
+    const messages: Record<string, string> = {};
 
     for (const channelId of getAllAnnouncementChannelIds()) {
       const channel = await client.channels.fetch(channelId).catch(() => null);
-      if (channel?.type === ChannelType.GuildText) {
-        await channel.send(message).catch((error) => {
-          console.error(`Failed to send upload announcement to channel ${channelId}:`, error);
-        });
+      if (channel?.type !== ChannelType.GuildText) continue;
+
+      const existingId = today.messages[channelId];
+      const edited = existingId
+        ? await channel.messages.edit(existingId, content).catch(() => null)
+        : null;
+
+      if (edited) {
+        messages[channelId] = edited.id;
+        continue;
       }
+
+      if (!hasNewVideo) continue; // don't repost a deleted announcement just because a video was removed
+
+      const sent = await channel.send(content).catch((error) => {
+        console.error(`Failed to send upload announcement to channel ${channelId}:`, error);
+        return null;
+      });
+      if (sent) messages[channelId] = sent.id;
     }
+
+    setCreatorState(creator.name, {
+      uploadsPlaylistId,
+      initialized: true,
+      today: { date, videoIds, messages },
+    });
+    return;
   }
 
-  setCreatorState(creator.name, { uploadsPlaylistId, lastVideoId: latestVideos[0].videoId, initialized: true });
+  setCreatorState(creator.name, {
+    uploadsPlaylistId,
+    initialized: true,
+    today: { ...today, videoIds: listChanged ? videoIds : today.videoIds },
+  });
 }
 
 async function checkAllCreators(client: Client): Promise<void> {

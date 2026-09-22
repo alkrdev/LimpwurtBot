@@ -5,6 +5,15 @@ import { config } from "../config.js";
 interface CreatorUploadState {
   uploadsPlaylistId?: string;
   lastVideoId?: string;
+  /** Today's announcement for this creator, which gets edited as more videos come out the same day. */
+  today?: {
+    /** UTC date (YYYY-MM-DD) this entry is for. */
+    date: string;
+    /** Videos included in the announcement, oldest first. */
+    videoIds: string[];
+    /** channelId -> messageId of the posted announcement. */
+    messages: Record<string, string>;
+  };
   /** True once we've established a baseline for this creator, so we never announce their entire back-catalog. */
   initialized: boolean;
 }
