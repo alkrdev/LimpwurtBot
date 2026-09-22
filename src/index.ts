@@ -59,6 +59,15 @@ async function main() {
   await client.login(config.discordToken);
 }
 
+// Railway sends SIGTERM to the old container on every redeploy. Without a handler Node is killed by
+// the signal, npm reports "command failed", and Railway treats the non-zero exit as a crash.
+for (const signal of ["SIGTERM", "SIGINT"] as const) {
+  process.once(signal, () => {
+    console.log(`Received ${signal}, shutting down.`);
+    void client.destroy().finally(() => process.exit(0));
+  });
+}
+
 main().catch((error) => {
   console.error("Failed to start bot:", error);
   process.exit(1);
