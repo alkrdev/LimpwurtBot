@@ -1,4 +1,5 @@
-import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
+import { Client, Collection, Events, GatewayIntentBits, MessageFlags } from "discord.js";
+import type { InteractionReplyOptions } from "discord.js";
 import { config } from "./config.js";
 import { commands } from "./commands/index.js";
 import { registerCommands } from "./register-commands.js";
@@ -31,7 +32,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   if (remaining !== null) {
     await interaction.reply({
       content: `Slow down! Try \`/${interaction.commandName}\` again in ${remaining}s.`,
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return;
   }
@@ -40,7 +41,10 @@ client.on(Events.InteractionCreate, async (interaction) => {
     await command.execute(interaction);
   } catch (error) {
     console.error(`Error executing command ${interaction.commandName}:`, error);
-    const errorResponse = { content: "Something went wrong running that command.", ephemeral: true };
+    const errorResponse: InteractionReplyOptions = {
+      content: "Something went wrong running that command.",
+      flags: MessageFlags.Ephemeral,
+    };
 
     if (interaction.replied || interaction.deferred) {
       await interaction.followUp(errorResponse);
