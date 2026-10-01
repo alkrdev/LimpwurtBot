@@ -15,7 +15,7 @@ const faqPath = path.join(__dirname, "..", "data", "faq.json");
 const faqEntries: FaqEntry[] = JSON.parse(readFileSync(faqPath, "utf-8"));
 
 // Publicly visible replies; every other FAQ entry replies ephemerally.
-const PUBLIC_ENTRY_KEYS = new Set(["old-streams"]);
+const PUBLIC_ENTRY_KEYS = new Set(["old-streams", "unlocked-chunks"]);
 
 export const faqCommands: Command[] = faqEntries.map((entry) => ({
   data: new SlashCommandBuilder().setName(entry.key).setDescription(entry.question.slice(0, 100)),
