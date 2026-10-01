@@ -60,10 +60,12 @@ async function main() {
 }
 
 // Railway sends SIGTERM to the old container on every redeploy. Without a handler Node is killed by
-// the signal, npm reports "command failed", and Railway treats the non-zero exit as a crash.
+// the signal and Railway treats the non-zero exit as a crash. railway.json starts Node directly rather
+// than through `npm start`, because npm also receives the signal and exits non-zero on its own.
 for (const signal of ["SIGTERM", "SIGINT"] as const) {
   process.once(signal, () => {
     console.log(`Received ${signal}, shutting down.`);
+    setTimeout(() => process.exit(0), 5000).unref();
     void client.destroy().finally(() => process.exit(0));
   });
 }
