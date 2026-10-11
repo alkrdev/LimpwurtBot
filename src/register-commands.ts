@@ -1,9 +1,9 @@
 import { REST, Routes } from "discord.js";
 import { config } from "./config.js";
-import { commands } from "./commands/index.js";
+import { getCommands, messageCommands } from "./commands/index.js";
 
 export async function registerCommands(): Promise<void> {
-  const body = commands.map((command) => command.data.toJSON());
+  const body = [...getCommands(), ...messageCommands].map((command) => command.data.toJSON());
   const rest = new REST().setToken(config.discordToken);
 
   if (config.guildIds.length === 0) {

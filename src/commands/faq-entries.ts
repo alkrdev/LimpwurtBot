@@ -1,31 +1,24 @@
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import path from "node:path";
-import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from "discord.js";
+import { MessageFlags, SlashCommandBuilder } from "discord.js";
 import type { Command } from "../types.js";
+import { faqEmbed, findFaqEntry, getFaqEntries } from "../faq.js";
 
-interface FaqEntry {
-  key: string;
-  question: string;
-  answer: string;
+/** One shortcut slash command per FAQ entry, e.g. /old-streams. */
+export function faqShortcutCommands(): Command[] {
+  return getFaqEntries().map((entry) => ({
+    data: new SlashCommandBuilder().setName(entry.key).setDescription(entry.question.slice(0, 100)),
+
+    async execute(interaction) {
+      // Look the entry up again so edits made since the commands were built are picked up.
+      const current = findFaqEntry(entry.key);
+      if (!current) {
+        await interaction.reply({ content: "That FAQ entry has been removed.", flags: MessageFlags.Ephemeral });
+        return;
+      }
+
+      await interaction.reply({
+        embeds: [faqEmbed(current)],
+        flags: current.public ? undefined : MessageFlags.Ephemeral,
+      });
+    },
+  }));
 }
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const faqPath = path.join(__dirname, "..", "data", "faq.json");
-const faqEntries: FaqEntry[] = JSON.parse(readFileSync(faqPath, "utf-8"));
-
-// Publicly visible replies; every other FAQ entry replies ephemerally.
-const PUBLIC_ENTRY_KEYS = new Set(["old-streams", "unlocked-chunks", "denmark"]);
-
-export const faqCommands: Command[] = faqEntries.map((entry) => ({
-  data: new SlashCommandBuilder().setName(entry.key).setDescription(entry.question.slice(0, 100)),
-
-  async execute(interaction) {
-    const embed = new EmbedBuilder()
-      .setColor(0x5865f2)
-      .setTitle(entry.question)
-      .setDescription(entry.answer);
-
-    await interaction.reply({ embeds: [embed], flags: PUBLIC_ENTRY_KEYS.has(entry.key) ? undefined : MessageFlags.Ephemeral });
-  },
-}));

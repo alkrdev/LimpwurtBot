@@ -1,29 +1,49 @@
-import { Client, Collection, Events, GatewayIntentBits, MessageFlags } from "discord.js";
+import { Client, Events, GatewayIntentBits, MessageFlags } from "discord.js";
 import type { InteractionReplyOptions } from "discord.js";
 import { config } from "./config.js";
-import { commands } from "./commands/index.js";
+import { getCommands, messageCommands } from "./commands/index.js";
 import { registerCommands } from "./register-commands.js";
 import { checkCooldown, DEFAULT_COOLDOWN_SECONDS } from "./cooldowns.js";
 import { startUploadPolling } from "./uploads/poller.js";
-import type { Command } from "./types.js";
+import type { Command, MessageCommand } from "./types.js";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-
-const commandsByName = new Collection<string, Command>(
-  commands.map((command) => [command.data.name, command]),
-);
 
 client.once(Events.ClientReady, (readyClient) => {
   console.log(`Logged in as ${readyClient.user.tag}`);
   startUploadPolling(readyClient);
 });
 
-client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
+function findCommand(name: string): Command | undefined {
+  return getCommands().find((command) => command.data.name === name);
+}
 
-  const command = commandsByName.get(interaction.commandName);
+client.on(Events.InteractionCreate, async (interaction) => {
+  if (interaction.isAutocomplete()) {
+    await findCommand(interaction.commandName)
+      ?.autocomplete?.(interaction)
+      .catch((error) => console.error(`Error autocompleting command ${interaction.commandName}:`, error));
+    return;
+  }
+
+  let command: Command | MessageCommand | undefined;
+  let run: () => Promise<void>;
+  if (interaction.isChatInputCommand()) {
+    const slashCommand = findCommand(interaction.commandName);
+    command = slashCommand;
+    run = () => slashCommand!.execute(interaction);
+  } else if (interaction.isMessageContextMenuCommand()) {
+    const messageCommand = messageCommands.find((candidate) => candidate.data.name === interaction.commandName);
+    command = messageCommand;
+    run = () => messageCommand!.execute(interaction);
+  } else {
+    return;
+  }
+
   if (!command) {
+    // e.g. a FAQ shortcut removed moments ago that Discord hasn't dropped from the user's client yet.
     console.warn(`No handler registered for command: ${interaction.commandName}`);
+    await interaction.reply({ content: "That command no longer exists.", flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -31,14 +51,14 @@ client.on(Events.InteractionCreate, async (interaction) => {
   const remaining = checkCooldown(interaction.commandName, interaction.user.id, cooldownSeconds);
   if (remaining !== null) {
     await interaction.reply({
-      content: `Slow down! Try \`/${interaction.commandName}\` again in ${remaining}s.`,
+      content: `Slow down! Try \`${interaction.commandName}\` again in ${remaining}s.`,
       flags: MessageFlags.Ephemeral,
     });
     return;
   }
 
   try {
-    await command.execute(interaction);
+    await run();
   } catch (error) {
     console.error(`Error executing command ${interaction.commandName}:`, error);
     const errorResponse: InteractionReplyOptions = {
@@ -46,11 +66,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
       flags: MessageFlags.Ephemeral,
     };
 
-    if (interaction.replied || interaction.deferred) {
-      await interaction.followUp(errorResponse);
-    } else {
-      await interaction.reply(errorResponse);
-    }
+    // Showing a modal also counts as replying, and that response can't take a follow-up.
+    const respond = interaction.replied || interaction.deferred ? interaction.followUp(errorResponse) : interaction.reply(errorResponse);
+    await respond.catch(() => {});
   }
 });
 

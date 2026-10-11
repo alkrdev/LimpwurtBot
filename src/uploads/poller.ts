@@ -1,7 +1,8 @@
 import type { Client } from "discord.js";
 import { ChannelType } from "discord.js";
 import { config } from "../config.js";
-import { creators, youtubeHandleFor } from "../creators.js";
+import { getCreators, youtubeHandleFor } from "../creators.js";
+import type { Creator } from "../creators.js";
 import { getAllAnnouncementChannelIds, getCreatorState, setCreatorState } from "./store.js";
 import { fetchLatestVideos, resolveUploadsPlaylistId } from "./youtube.js";
 
@@ -19,7 +20,7 @@ function buildMessage(creatorName: string, videoIds: string[]): string {
   return `${creatorName} posted ${urls.length} new videos today:\n${urls.join("\n")}`;
 }
 
-async function checkCreator(client: Client, creator: (typeof creators)[number]): Promise<void> {
+async function checkCreator(client: Client, creator: Creator): Promise<void> {
   const apiKey = config.youtubeApiKey;
   if (!apiKey) return;
 
@@ -110,7 +111,7 @@ async function checkCreator(client: Client, creator: (typeof creators)[number]):
 }
 
 async function checkAllCreators(client: Client): Promise<void> {
-  for (const creator of creators) {
+  for (const creator of getCreators()) {
     try {
       await checkCreator(client, creator);
     } catch (error) {

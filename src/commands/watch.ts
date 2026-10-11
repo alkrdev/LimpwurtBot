@@ -1,6 +1,6 @@
 import { EmbedBuilder, MessageFlags, SlashCommandBuilder } from "discord.js";
 import type { Command } from "../types.js";
-import { creators } from "../creators.js";
+import { getCreators } from "../creators.js";
 
 export const command: Command = {
   data: new SlashCommandBuilder()
@@ -8,6 +8,7 @@ export const command: Command = {
     .setDescription("List creators from the community worth checking out"),
 
   async execute(interaction) {
+    const creators = getCreators();
     if (creators.length === 0) {
       await interaction.reply({
         content: "No creators are configured yet. Ask an admin to add some!",
@@ -21,7 +22,7 @@ export const command: Command = {
       .setTitle("Go give these creators some love")
       .setDescription(
         creators
-          .map((creator) => `• [${creator.name}](${creator.url}) — ${creator.series.join(", ")}`)
+          .map((creator) => `• [${creator.name}](${creator.url})${creator.series.length ? ` — ${creator.series.join(", ")}` : ""}`)
           .join("\n"),
       );
 

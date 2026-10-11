@@ -7,7 +7,8 @@
   {
     "key": "unlocked-chunks",
     "question": "What are the current unlocked chunks?",
-    "answer": "Chunk Picker: https://source-chunk.github.io/chunk-picker-v2/?limp-view"
+    "answer": "Chunk Picker: https://source-chunk.github.io/chunk-picker-v2/?limp-view",
+    "public": true
   },
   {
     "key": "chunk-not-rollable",
@@ -22,11 +23,13 @@
   {
     "key": "denmark",
     "question": "Is Denmark a real country?",
-    "answer": "Don't be silly, of course it isn't."
+    "answer": "Don't be silly, of course it isn't.",
+    "public": true
   },
   {
     "key": "old-streams",
     "question": "Where can I watch old streams?",
-    "answer": "https://www.youtube.com/playlist?list=PLDeBkMwh3gDOgc1z0HelLWWMtIfW69iT3\n\nI unlist them because I don't want to clog people's recommended, but they are visible on my main page."
+    "answer": "https://www.youtube.com/playlist?list=PLDeBkMwh3gDOgc1z0HelLWWMtIfW69iT3\n\nI unlist them because I don't want to clog people's recommended, but they are visible on my main page.",
+    "public": true
   }
 ]

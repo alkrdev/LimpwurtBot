@@ -4,10 +4,13 @@ Discord bot for the community server. Built with [discord.js](https://discord.js
 
 ## Commands
 
-- `/watch` — lists all creators from the community worth checking out, from [src/data/creators.json](src/data/creators.json).
+- `/watch` — lists all creators from the community worth checking out.
 - `/when` — points people asking "when?" at a specific channel. Admin-only until granted to a role (see [src/commands/when.ts](src/commands/when.ts)).
 - `/set-upload-channel` — admin-only. Sets the channel where new-video announcements get posted (see below).
-- A handful of `/`-prefixed FAQ commands generated from [src/data/faq.json](src/data/faq.json).
+- `/faq topic:<search>` — looks up a FAQ answer, with autocomplete over questions and answers. Every FAQ entry also has its own shortcut command, e.g. `/old-streams`.
+- **Answer with FAQ** — right-click a message → Apps → pick a FAQ entry, and the bot replies to that message with it. Visible to members with Manage Messages by default.
+- `/manage-faq add|edit|remove` — admin-only. Edit FAQ entries in a pop-up form (multi-line answers, and a "show publicly" toggle). Adding or removing an entry also adds or removes its shortcut command.
+- `/manage-creators add|edit|remove` — admin-only. Edit the creator list used by `/watch` and the upload announcements.
 
 ## Setup
 
@@ -45,9 +48,9 @@ Discord bot for the community server. Built with [discord.js](https://discord.js
    npm run dev
    ```
 
-## Editing the creator list
+## Editing the FAQ and creator list
 
-Edit [src/data/creators.json](src/data/creators.json) — an array of `{ "name": "...", "url": "..." }` objects. No restart is required for the file to be picked up on the next deploy/restart of the bot process (it's read at boot).
+Use `/manage-faq` and `/manage-creators` in Discord. The first edit copies the bundled [src/data/faq.json](src/data/faq.json) / [src/data/creators.json](src/data/creators.json) into `STATE_DIR`, and from then on the copy in `STATE_DIR` is what the bot uses — later changes to the bundled files are ignored. `STATE_DIR` must be on a mounted Railway Volume, or edits are lost on every redeploy.
 
 ## New-upload announcements
 
