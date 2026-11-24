@@ -68,5 +68,25 @@
     "name": "Impling Only",
     "url": "https://www.youtube.com/@ImplingOnly",
     "series": ["Impling Only", "Extreme Chunk: Corsair Cove"]
+  },
+  {
+    "name": "Buz",
+    "url": "https://www.youtube.com/@BuzRS",
+    "series": ["Supreme Chunk"]
+  },
+  {
+    "name": "Clubs",
+    "url": "https://www.youtube.com/@ClubsRS",
+    "series": ["Prifddinas Chunk"]
+  },
+  {
+    "name": "Erik",
+    "url": "https://www.youtube.com/@ErikEntrana",
+    "series": ["Entrana Chunk"]
+  },
+  {
+    "name": "Mad Season",
+    "url": "https://www.youtube.com/@madseasonshow",
+    "series": ["Unguided"]
   }
 ]
