@@ -58,12 +58,7 @@ export const command: MessageCommand = {
       .setColor(0x5865f2)
       .setAuthor({ name: authorName, iconURL: target.author.displayAvatarURL(), url: target.url })
       .setDescription(clip(target.content || "*(no text)*", MAX_DESCRIPTION))
-      .addFields({
-        name: "Source",
-        value: `${target.author} in <#${target.channelId}> · [Jump to message](${target.url})`,
-      })
-      .setFooter({ text: `Quoted by ${interaction.user.displayName}` })
-      .setTimestamp(target.createdAt);
+      .addFields({ name: "Source", value: `[Jump to message](${target.url})` });
 
     if (image) embed.setImage(image.url);
     if (otherAttachments.size > 0) {
