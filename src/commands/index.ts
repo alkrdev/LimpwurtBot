@@ -1,6 +1,7 @@
 import type { Command, MessageCommand } from "../types.js";
 import { command as watch } from "./watch.js";
 import { command as setUploadChannel } from "./set-upload-channel.js";
+import { command as uploadAnnouncements } from "./upload-announcements.js";
 import { command as faq } from "./faq.js";
 import { command as manageFaq } from "./manage-faq.js";
 import { command as manageCreators } from "./manage-creators.js";
@@ -9,7 +10,7 @@ import { command as quoteMessage } from "./quote-message.js";
 import { command as setQuoteChannel } from "./set-quote-channel.js";
 import { faqShortcutCommands } from "./faq-entries.js";
 
-const builtInCommands: Command[] = [watch, setUploadChannel, setQuoteChannel, faq, manageFaq, manageCreators];
+const builtInCommands: Command[] = [watch, setUploadChannel, uploadAnnouncements, setQuoteChannel, faq, manageFaq, manageCreators];
 
 export const messageCommands: MessageCommand[] = [answerWithFaq, quoteMessage];
 

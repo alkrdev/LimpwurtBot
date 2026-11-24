@@ -3,7 +3,7 @@ import { ChannelType } from "discord.js";
 import { config } from "../config.js";
 import { getCreators, youtubeHandleFor } from "../creators.js";
 import type { Creator } from "../creators.js";
-import { getAllAnnouncementChannelIds, getCreatorState, setCreatorState } from "./store.js";
+import { getAllAnnouncementChannelIds, getCreatorState, isPaused, setCreatorState } from "./store.js";
 import { fetchLatestVideos, resolveUploadsPlaylistId } from "./youtube.js";
 
 function todayUtc(): string {
@@ -46,14 +46,16 @@ async function checkCreator(client: Client, creator: Creator): Promise<void> {
 
   const date = todayUtc();
 
-  if (!state.initialized || !state.today) {
+  if (!state.initialized || !state.today || isPaused()) {
     // First time seeing this creator (or first run of the daily-message format): treat whatever is
     // already out today as known, without posting, so we never dump their back-catalog or repeat
-    // announcements the previous format already made.
+    // announcements the previous format already made. While paused we do the same, so resuming
+    // doesn't post everything that came out during the pause.
+    const keptMessages = state.today?.date === date ? state.today.messages : {};
     setCreatorState(creator.name, {
       uploadsPlaylistId,
       initialized: true,
-      today: { date, videoIds: todaysIds, messages: {} },
+      today: { date, videoIds: todaysIds, messages: keptMessages },
     });
     return;
   }

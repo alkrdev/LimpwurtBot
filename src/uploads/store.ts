@@ -23,6 +23,8 @@ interface StoreData {
   announcementChannels: Record<string, string>;
   /** creator name -> tracking state. */
   creators: Record<string, CreatorUploadState>;
+  /** True while admins have paused announcements. Videos are still tracked, just not posted. */
+  paused?: boolean;
 }
 
 const storePath = path.join(config.stateDir, "uploads.json");
@@ -60,5 +62,15 @@ export function getCreatorState(creatorName: string): CreatorUploadState {
 export function setCreatorState(creatorName: string, state: CreatorUploadState): void {
   const data = load();
   data.creators[creatorName] = state;
+  save(data);
+}
+
+export function isPaused(): boolean {
+  return load().paused === true;
+}
+
+export function setPaused(paused: boolean): void {
+  const data = load();
+  data.paused = paused;
   save(data);
 }
