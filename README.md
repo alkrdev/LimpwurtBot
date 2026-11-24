@@ -5,7 +5,6 @@ Discord bot for the community server. Built with [discord.js](https://discord.js
 ## Commands
 
 - `/watch` — lists all creators from the community worth checking out.
-- `/when` — points people asking "when?" at a specific channel. Admin-only until granted to a role (see [src/commands/when.ts](src/commands/when.ts)).
 - `/set-upload-channel` — admin-only. Sets the channel where new-video announcements get posted (see below).
 - `/faq topic:<search>` — looks up a FAQ answer, with autocomplete over questions and answers. Every FAQ entry also has its own shortcut command, e.g. `/old-streams`.
 - **Answer with FAQ** — right-click a message → Apps → pick a FAQ entry, and the bot replies to that message with it. Visible to members with Manage Messages by default.

@@ -22,6 +22,5 @@
 
 ## Admin and quality of life
 
-- **Grant `/when` to a role via a command.** Currently admin-only until permissions are changed by hand.
 - **`/status` health check.** Uptime, last successful YouTube poll, API quota errors. The poller currently fails silently.
 - **Durable state.** Check that Railway has a volume mounted for the state dir; without one, redeploys wipe `uploads.json` and the announcement channel setting. Consider SQLite if state grows.
