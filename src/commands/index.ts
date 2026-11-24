@@ -5,11 +5,13 @@ import { command as faq } from "./faq.js";
 import { command as manageFaq } from "./manage-faq.js";
 import { command as manageCreators } from "./manage-creators.js";
 import { command as answerWithFaq } from "./answer-with-faq.js";
+import { command as quoteMessage } from "./quote-message.js";
+import { command as setQuoteChannel } from "./set-quote-channel.js";
 import { faqShortcutCommands } from "./faq-entries.js";
 
-const builtInCommands: Command[] = [watch, setUploadChannel, faq, manageFaq, manageCreators];
+const builtInCommands: Command[] = [watch, setUploadChannel, setQuoteChannel, faq, manageFaq, manageCreators];
 
-export const messageCommands: MessageCommand[] = [answerWithFaq];
+export const messageCommands: MessageCommand[] = [answerWithFaq, quoteMessage];
 
 /** Built fresh each call, since FAQ shortcut commands change when admins edit the FAQ. */
 export function getCommands(): Command[] {

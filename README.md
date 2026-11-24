@@ -8,6 +8,8 @@ Discord bot for the community server. Built with [discord.js](https://discord.js
 - `/set-upload-channel` — admin-only. Sets the channel where new-video announcements get posted (see below).
 - `/faq topic:<search>` — looks up a FAQ answer, with autocomplete over questions and answers. Every FAQ entry also has its own shortcut command, e.g. `/old-streams`.
 - **Answer with FAQ** — right-click a message → Apps → pick a FAQ entry, and the bot replies to that message with it. Visible to members with Manage Messages by default.
+- **Quote message** — right-click a message → Apps → Quote message, and the bot posts a quote of it (author, time, text, image, and a jump link back) in the quote channel. Visible to members with Manage Messages by default.
+- `/set-quote-channel` — admin-only. Sets the channel that **Quote message** posts in.
 - `/manage-faq add|edit|remove` — admin-only. Edit FAQ entries in a pop-up form (multi-line answers, and a "show publicly" toggle). Adding or removing an entry also adds or removes its shortcut command.
 - `/manage-creators add|edit|remove` — admin-only. Edit the creator list used by `/watch` and the upload announcements.
 
